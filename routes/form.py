@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-import uuid, json
+import uuid, json, re
 from uuid import UUID
 from typing import List
 
@@ -56,7 +56,7 @@ async def get_all_latest_version_forms():
             )
             
         grouped_forms = {}
-        format_string = "%a %b %d %Y %H:%M:%S GMT%z (%Z)" 
+        format_string = "%a %b %d %Y %H:%M:%S GMT%z" 
 
         for each_form in forms:
             print(len(forms))
@@ -64,7 +64,7 @@ async def get_all_latest_version_forms():
             if form_id not in grouped_forms:
                 grouped_forms[form_id] = each_form
             else:
-                if datetime.strptime(grouped_forms[form_id]['created_on'], format_string).timestamp() < datetime.strptime(each_form['created_on'], format_string).timestamp():
+                if datetime.strptime(re.sub(r' \([A-Za-z ]+\)', '', grouped_forms[form_id]['created_on']), format_string).timestamp() < datetime.strptime(re.sub(r' \([A-Za-z ]+\)', '', each_form['created_on']), format_string).timestamp():
                     grouped_forms[form_id] = each_form
 
         latest_version_forms = []
