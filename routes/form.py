@@ -17,6 +17,12 @@ form = Form()
 @form_builder_router.post("/form")
 async def create_form(form_data: List[FormDataRequestBody]):
     try:
+        previous_forms, error = form.read_form_db()
+        for each_form in previous_forms:
+            if each_form['form_version_id'] == form_data[0].form_version_id:
+                return ErrorResponse(
+                data=[], dev_msg="form version Id conflict", client_msg="Version Name Already Exists. Try with a Different version name."
+                )
         _, error = form.append_form_db(form_data)
         if error:
             return ErrorResponse(

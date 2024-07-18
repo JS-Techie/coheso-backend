@@ -155,7 +155,8 @@ async def get_total_submission():
             form_version = each_submission["form_version_id"]
             if form_version not in total_submissions:
                 total_submissions[form_version] = 1
-            total_submissions[form_version] = total_submissions[form_version]+1
+            else:
+                total_submissions[form_version] = total_submissions[form_version]+1
                 
 
         return SuccessResponse(data=total_submissions, dev_msg="Fetched successfully", client_msg="Versioned submissions fetched successfully")
